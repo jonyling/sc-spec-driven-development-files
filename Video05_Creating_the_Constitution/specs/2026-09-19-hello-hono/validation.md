@@ -30,12 +30,31 @@ HTTP status must be `200 OK`. Response body must be HTML and must contain:
 
 - An `<h1>` element with the text `AgentClinic`
 - A tagline (any short descriptive text; exact wording is an implementation choice)
+- A `<header>`, a `<main>`, and a `<footer>` (the shared layout)
 
-### 4. Hono version is pinned
+### 4. Stylesheet is served
+
+```
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/static/style.css
+```
+
+Must be `200`. The home page HTML must include a `<link>` to `/static/style.css`.
+
+### 5. Hono version is pinned
 
 `package.json` must list `hono` without a `^` or `~` range prefix. If `@hono/node-server` is present, it is pinned the same way.
 
-### 5. Strict TypeScript is on
+### 6. Header, Main, and Footer are separate files
+
+These paths must exist, each exporting one component:
+
+- `src/components/Header.tsx`
+- `src/components/Main.tsx`
+- `src/components/Footer.tsx`
+
+`src/components/Layout.tsx` must import those three modules. Defining `Header` / `Main` / `Footer` as local functions inside `Layout.tsx` (or `Home.tsx`) does not satisfy this.
+
+### 7. Strict TypeScript is on
 
 `tsconfig.json` must contain `"strict": true`.
 
@@ -44,4 +63,4 @@ HTTP status must be `200 OK`. Response body must be HTML and must contain:
 - No automated tests for this phase
 - No CI pipeline
 - No browser rendering check (`curl` is sufficient)
-- No CSS, shared layout, extra routes, or database
+- No extra routes or database

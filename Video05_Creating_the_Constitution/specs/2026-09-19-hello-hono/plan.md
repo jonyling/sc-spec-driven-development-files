@@ -25,7 +25,17 @@
 12. Update `GET /` to return the rendered JSX (HTML), not a plain string
 13. Point `dev` at the JSX entry file if it moved to `src/index.tsx`
 
-## Group 5 — Verify
+## Group 5 — Layout Component
 
-14. Run `npm run typecheck` — must exit 0 with no errors
-15. Run `npm run dev` and confirm `curl localhost:3000` returns HTML containing the `<h1>` and tagline
+14. Create `src/components/Layout.tsx` with a top-level shell (`<html>`, `<head>`, `<body>`). It **imports** `<Header>`, `<Main>`, and `<Footer>` — it does not define them in the same file
+15. Create `src/components/Header.tsx`, `src/components/Main.tsx`, and `src/components/Footer.tsx` as **separate files**, one component each. Do not colocate these three in `Layout.tsx`
+16. `<head>` links to `/static/style.css` (and any font preconnects the page needs)
+17. Create `static/style.css` with base styles and custom properties; serve `static/` via `@hono/node-server/serve-static` in `src/index.tsx`
+18. Update `src/pages/Home.tsx` to render inside `<Layout>`; page content is the child of `<Main>`
+
+## Group 6 — Verify
+
+19. Run `npm run typecheck` — must exit 0 with no errors
+20. Run `npm run dev` and confirm `curl localhost:3000` returns HTML containing the heading, a `<header>`, a `<main>`, and a `<footer>`
+21. Confirm `curl localhost:3000/static/style.css` returns the CSS file
+22. Confirm `src/components/Header.tsx`, `src/components/Main.tsx`, and `src/components/Footer.tsx` each exist as their own file, and `Layout.tsx` imports them rather than defining them inline

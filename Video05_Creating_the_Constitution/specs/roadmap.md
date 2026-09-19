@@ -4,10 +4,10 @@ Phases are intentionally small — each one is a shippable slice of work, indepe
 
 ---
 
-## Phase 1 — Hello Hono
+## Phase 1 — Hello Hono ✅
 
 - Install and configure Hono with a `tsx` dev server
-- Single `/` route returning something like "AgentClinic is open for business"
+- Single `/` route returning an HTML home page (JSX, shared layout, CSS)
 - Confirm TypeScript types work end-to-end
 
 ## Phase 2 — Base Layout

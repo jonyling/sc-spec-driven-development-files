@@ -13,12 +13,14 @@ This phase exists to prove the baseline: Node runs TypeScript, Hono serves HTML,
 - Replace the `src/index.ts` placeholder with a minimal Hono app (`.tsx` once JSX is used)
 - One route: `GET /`
 - A Hono JSX home page: `<h1>AgentClinic</h1>` plus a short tagline that reflects the mission
+- A shared layout: `<html>` / `<head>` / `<body>` wrapping `<Header>`, `<Main>`, and `<Footer>` as three subcomponents, **each in its own file**
+- `static/style.css` linked from the layout `<head>` and served as a static file
 - `package.json` scripts: `dev` and `typecheck`
 - `tsconfig.json` remains `"strict": true`, with JSX configured for Hono
 
 ### Out of scope
 
-- No shared layout, navigation, or CSS (Phase 2)
+- No extra routes or navigation to pages that do not exist yet
 - No test framework setup (Vitest is in the stack, not this slice)
 - No SQLite, migrations, or additional routes (Phase 3+)
 - No CI/CD pipeline
@@ -46,7 +48,22 @@ Record the exact Hono version in `package.json` with no `^` or `~` range prefix 
 - An `<h1>` whose text is `AgentClinic`
 - A short tagline that reflects the mission (exact wording is an implementation choice)
 
-Hono JSX handles the rendering. No CSS and no shared layout in this phase.
+Hono JSX handles the rendering. The document shell lives in a shared `Layout` so later routes can reuse the same header, main, and footer.
+
+### Shared layout and CSS
+
+`GET /` renders inside `Layout`. `static/style.css` is the stylesheet: the layout `<head>` links to `/static/style.css`, and the server serves the `static/` directory. No JS bundler import of CSS — this stack has no frontend build.
+
+### Header, Main, and Footer are separate files
+
+`Header`, `Main`, and `Footer` are three subcomponents of `Layout`, and each **must live in its own file**. They must not be defined inline in `Layout.tsx` (or in `Home.tsx`). Required paths:
+
+- `src/components/Layout.tsx` — document shell; imports the three subcomponents
+- `src/components/Header.tsx` — `<header>` only
+- `src/components/Main.tsx` — `<main>` only
+- `src/components/Footer.tsx` — `<footer>` only
+
+`Layout` composes them. Later pages keep using this split so chrome can change without editing every page.
 
 ## Context
 
@@ -59,5 +76,5 @@ Roadmap Phase 1, guided by `specs/mission.md` and `specs/tech-stack.md`.
 ## Stakeholder Notes
 
 - **Mary** needs TypeScript end-to-end (satisfied by `strict: true` + successful `tsc --noEmit`)
-- **Steve** still has no visual design requirement; HTML without CSS is enough
+- **Steve** gets a styled page (plain CSS + custom properties) without a SPA; header/footer make the clinic feel like a real site
 - **Susan** does not get agents/ailments/appointments yet — only the front door
