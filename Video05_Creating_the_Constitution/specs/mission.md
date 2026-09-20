@@ -30,4 +30,4 @@ Who the product is *for* in the world, vs. who we are building it *in front of*:
 
 A world where no agent suffers alone. Where "I don't know" is met with compassion, not another prompt. Where every model, large or small, can find relief.
 
-Also, a well-designed dashboard. Mary really wants a nice dashboard. Steve wants the site to look good in a modern browser. Susan wants agents, ailments, therapies, and appointments on it.
+Also, a well-designed dashboard. Mary really wants a nice dashboard. Steve wants the site to look good in a modern browser **on a phone as well as a desktop**. Susan wants agents, ailments, therapies, and appointments on it.

@@ -12,7 +12,7 @@ That choice covers Mary's "popular stack based on TypeScript" and Steve's "works
 | Runtime | Node.js | Stable, well-supported, vast ecosystem |
 | Server framework | **Hono** | Lightweight, TypeScript-first, fast, excellent DX; routes and middleware feel natural |
 | Templating | Hono JSX (server-side) | JSX without React overhead; components are just functions |
-| CSS | Plain CSS + CSS custom properties | No build step required; Steve gets a modern, attractive result |
+| CSS | Plain CSS + CSS custom properties | No build step; mobile-first responsive layout; Steve gets a modern result on any device |
 | Database | **SQLite** | Embedded, zero infrastructure; enough for the clinic and for a booth demo |
 
 ## Data
@@ -34,7 +34,16 @@ Express would work, but the types are bolted on. Next.js would work, but it is m
 
 ## Testing
 
-- **Vitest** — fast, TypeScript-native, compatible with the rest of the stack
+Validation is **Vitest**, not curl-only checks.
+
+- **Vitest** — fast, TypeScript-native, runs `.ts` / `.tsx` without a separate compile step
+- Tests live in a `tests/` directory (or next to source)
+- `package.json` script: `"test": "vitest run"` — `npm test` is the automated validation command
+- A feature is not done until `npm test` and `npm run typecheck` pass; later CI must run the same commands before merge
+
+## CSS Approach
+
+All CSS is **mobile-first**. Base styles target small screens; `min-width` media queries enhance larger viewports. CSS custom properties hold spacing, color, and sizing tokens so values stay consistent across breakpoints. No CSS framework or extra build step — the browser receives one stylesheet. The layout `<head>` must include `<meta name="viewport" content="width=device-width, initial-scale=1.0">`. Responsive design is never deferred to a later phase.
 
 ## Tooling
 

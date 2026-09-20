@@ -9,6 +9,8 @@ Phases are intentionally small — each one is a shippable slice of work, indepe
 - Install and configure Hono with a `tsx` dev server
 - Single `/` route returning an HTML home page (JSX, shared layout, CSS)
 - Confirm TypeScript types work end-to-end
+- Vitest suite for `GET /` and layout components; `npm test` is the validation command
+- Mobile-first CSS (custom properties, `min-width` breakpoints, viewport meta) — this is the baseline for every later phase
 
 ## Phase 2 — Base Layout
 
@@ -53,7 +55,7 @@ Phases are intentionally small — each one is a shippable slice of work, indepe
 
 ## Phase 9 — Polish & Accessibility
 
-- Responsive layout for Steve's modern-browser requirement
+- Visual polish on top of the mobile-first baseline
 - Semantic HTML audit
 - Keyboard navigation and focus styles
 

@@ -14,14 +14,17 @@ This phase exists to prove the baseline: Node runs TypeScript, Hono serves HTML,
 - One route: `GET /`
 - A Hono JSX home page: `<h1>AgentClinic</h1>` plus a short tagline that reflects the mission
 - A shared layout: `<html>` / `<head>` / `<body>` wrapping `<Header>`, `<Main>`, and `<Footer>` as three subcomponents, **each in its own file**
-- `static/style.css` linked from the layout `<head>` and served as a static file
-- `package.json` scripts: `dev` and `typecheck`
+- `static/style.css` linked from the layout `<head>` and served as a static file; CSS is mobile-first
+- Viewport meta tag in the layout: `width=device-width, initial-scale=1.0`
+- `package.json` scripts: `dev`, `typecheck`, and `test` (Vitest)
+- `vitest` pinned as a dev dependency (exact version, no `^` or `~`)
+- Hono `app` exported from `src/app.tsx` so tests can request routes without listening on a port
+- Vitest suite for `GET /` and the layout components (`tests/`)
 - `tsconfig.json` remains `"strict": true`, with JSX configured for Hono
 
 ### Out of scope
 
 - No extra routes or navigation to pages that do not exist yet
-- No test framework setup (Vitest is in the stack, not this slice)
 - No SQLite, migrations, or additional routes (Phase 3+)
 - No CI/CD pipeline
 
@@ -35,11 +38,16 @@ Record the exact Hono version in `package.json` with no `^` or `~` range prefix 
 
 `tsconfig.json` must include `"strict": true`. This is non-negotiable from the first commit so the codebase never accumulates loose types.
 
-### Dev loop is `tsx`, check is `tsc --noEmit`
+### Dev loop is `tsx`, check is `tsc --noEmit`, validation is Vitest
 
 - `"dev"` runs the Hono entry via `tsx` (watch mode is fine if it stays one command)
 - `"typecheck": "tsc --noEmit"`
+- `"test": "vitest run"`
 - Default listen port: `3000`
+
+Pin `vitest` the same way as Hono: exact version, no `^` or `~`.
+
+The HTTP app must be importable without calling `serve()`, so Vitest can use `app.request()` (or equivalent) instead of curling a live port.
 
 ### Home page is HTML via Hono JSX
 
@@ -53,6 +61,16 @@ Hono JSX handles the rendering. The document shell lives in a shared `Layout` so
 ### Shared layout and CSS
 
 `GET /` renders inside `Layout`. `static/style.css` is the stylesheet: the layout `<head>` links to `/static/style.css`, and the server serves the `static/` directory. No JS bundler import of CSS — this stack has no frontend build.
+
+### Mobile-first responsive design
+
+This is a product-wide rule, not a later-phase nice-to-have:
+
+- Base CSS targets small screens; larger layouts use `@media (min-width: …)` only
+- Spacing, color, and sizing come from CSS custom properties
+- The layout includes `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
+
+Do not write desktop-first `max-width` overrides as the primary breakpoint strategy.
 
 ### Header, Main, and Footer are separate files
 
@@ -69,12 +87,12 @@ Hono JSX handles the rendering. The document shell lives in a shared `Layout` so
 
 Roadmap Phase 1, guided by `specs/mission.md` and `specs/tech-stack.md`.
 
-- **Stack:** server-side TypeScript, Hono, Hono JSX, `tsx` for dev, `tsc` for checks. SQLite is the project database; it is not used here.
+- **Stack:** server-side TypeScript, Hono, Hono JSX, `tsx` for dev, `tsc` for checks, Vitest for validation. SQLite is the project database; it is not used here.
 - **Mission:** the clinic is real enough to open the door. The home page should feel like a clinic, not a framework hello-world.
 - **Audience:** a student or booth demo should go from clone → `npm install` → `npm run dev` → a named home page in one sitting.
 
 ## Stakeholder Notes
 
-- **Mary** needs TypeScript end-to-end (satisfied by `strict: true` + successful `tsc --noEmit`)
-- **Steve** gets a styled page (plain CSS + custom properties) without a SPA; header/footer make the clinic feel like a real site
+- **Mary** needs TypeScript end-to-end (satisfied by `strict: true` + successful `tsc --noEmit` and `npm test`)
+- **Steve** gets a styled, **mobile-first** page that works in a modern browser on a phone and a desktop; header/footer make the clinic feel like a real site
 - **Susan** does not get agents/ailments/appointments yet — only the front door
