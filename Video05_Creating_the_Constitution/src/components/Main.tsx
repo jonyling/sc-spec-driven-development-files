@@ -1,5 +1,9 @@
-import type { PropsWithChildren } from "hono/jsx";
+import type { Child } from "hono/jsx";
 
-export function Main({ children }: PropsWithChildren) {
+export type MainProps = {
+  children?: Child;
+};
+
+export function Main({ children }: MainProps) {
   return <main>{children}</main>;
 }

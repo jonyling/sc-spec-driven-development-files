@@ -17,7 +17,7 @@ export function Home() {
         <figure class="portrait">
           <img
             src="/static/hero.jpg"
-            alt="A small robot resting in a sunlit clinic lounge with tea and plants."
+            alt="A small robot resting in a black lounge chair under an orange lamp."
           />
         </figure>
       </div>

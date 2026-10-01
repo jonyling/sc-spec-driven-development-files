@@ -1,13 +1,11 @@
 :root {
-  --cream: #f3eee4;
-  --paper: #fffaf2;
-  --sage: #c5d2c3;
-  --sage-deep: #24382f;
-  --brass: #b08948;
-  --ink: #1d2c25;
-  --muted: #5b6d63;
-  --live: #3d8f6e;
-  --line: color-mix(in srgb, var(--sage-deep) 12%, transparent);
+  --black: #111111;
+  --orange: #f25c05;
+  --paper: #fff7f0;
+  --ink: var(--black);
+  --muted: #5c534e;
+  --live: var(--orange);
+  --line: color-mix(in srgb, var(--black) 12%, transparent);
   --space-sm: 0.75rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
@@ -38,10 +36,9 @@ body {
   color: var(--ink);
   font-family: Outfit, ui-sans-serif, system-ui, sans-serif;
   background:
-    radial-gradient(900px 560px at 8% -8%, #e4eee0 0%, transparent 58%),
-    radial-gradient(720px 480px at 108% 12%, #ead7b0 0%, transparent 52%),
-    radial-gradient(640px 420px at 70% 120%, #d7e2d4 0%, transparent 55%),
-    var(--cream);
+    radial-gradient(900px 560px at 8% -8%, color-mix(in srgb, var(--orange) 16%, white) 0%, transparent 58%),
+    radial-gradient(720px 480px at 108% 12%, color-mix(in srgb, var(--orange) 10%, white) 0%, transparent 52%),
+    var(--paper);
 }
 
 header,
@@ -51,7 +48,8 @@ footer {
 }
 
 header {
-  border-bottom: 1px solid var(--line);
+  background: var(--black);
+  color: var(--paper);
 }
 
 footer {
@@ -68,7 +66,7 @@ footer p {
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
-  color: var(--sage-deep);
+  color: var(--paper);
   font-family: Fraunces, "Iowan Old Style", Palatino, Georgia, serif;
   font-size: 1.05rem;
   font-weight: 680;
@@ -77,7 +75,7 @@ footer p {
 }
 
 .brand-link:focus-visible {
-  outline: 2px solid var(--brass);
+  outline: 2px solid var(--orange);
   outline-offset: 4px;
 }
 
@@ -88,8 +86,8 @@ footer p {
   height: 1.85rem;
   flex-shrink: 0;
   border-radius: 0.6rem;
-  background: var(--sage-deep);
-  color: var(--cream);
+  background: var(--orange);
+  color: var(--black);
 }
 
 .mark svg {
@@ -126,7 +124,7 @@ main {
   align-items: center;
   gap: 0.55rem;
   margin: 0 0 var(--space-md);
-  color: var(--brass);
+  color: var(--black);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -145,7 +143,7 @@ main {
 h1 {
   margin: 0 0 var(--space-md);
   min-width: 0;
-  color: var(--sage-deep);
+  color: var(--black);
   font-family: Fraunces, "Iowan Old Style", Palatino, Georgia, serif;
   font-size: clamp(2.35rem, 11vw, 3.2rem);
   font-optical-sizing: auto;
@@ -180,10 +178,10 @@ h1 {
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius);
-  background: var(--sage);
+  background: color-mix(in srgb, var(--orange) 22%, var(--black));
   box-shadow:
-    0 28px 60px -28px rgba(36, 56, 47, 0.55),
-    0 0 0 1px color-mix(in srgb, var(--sage-deep) 8%, transparent);
+    0 28px 60px -28px color-mix(in srgb, var(--black) 55%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--black) 8%, transparent);
 }
 
 @keyframes pulse {

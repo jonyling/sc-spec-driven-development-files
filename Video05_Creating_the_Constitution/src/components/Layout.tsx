@@ -1,15 +1,22 @@
-import type { PropsWithChildren } from "hono/jsx";
+import { raw } from "hono/html";
+import type { Child } from "hono/jsx";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { Main } from "./Main";
 
-export function Layout({ children }: PropsWithChildren) {
+export type LayoutProps = {
+  children?: Child;
+};
+
+export function Layout({ children }: LayoutProps) {
   return (
-    <html lang="en">
+    <>
+      {raw("<!DOCTYPE html>")}
+      <html lang="en">
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#f3eee4" />
+        <meta name="theme-color" content="#111111" />
         <title>AgentClinic</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -29,5 +36,6 @@ export function Layout({ children }: PropsWithChildren) {
         <Footer />
       </body>
     </html>
+    </>
   );
 }

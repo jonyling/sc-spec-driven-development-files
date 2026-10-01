@@ -33,6 +33,7 @@ describe("Main", () => {
 describe("Layout", () => {
   it("renders the document shell with title, viewport, and stylesheet", () => {
     const html = Layout({ children: "page content" }).toString();
+    expect(html).toContain("<!DOCTYPE html>");
     expect(html).toContain('<html lang="en"');
     expect(html).toContain("<title>AgentClinic</title>");
     expect(html).toContain('name="viewport"');

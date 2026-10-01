@@ -45,6 +45,10 @@ Validation is **Vitest**, not curl-only checks.
 
 All CSS is **mobile-first**. Base styles target small screens; `min-width` media queries enhance larger viewports. CSS custom properties hold spacing, color, and sizing tokens so values stay consistent across breakpoints. No CSS framework or extra build step — the browser receives one stylesheet. The layout `<head>` must include `<meta name="viewport" content="width=device-width, initial-scale=1.0">`. Responsive design is never deferred to a later phase.
 
+## Brand
+
+Brand colors are **orange and black**. They live as CSS custom properties in `static/style.css` (`--orange`, `--black`) so every page uses the same tokens. Do not introduce a third brand color or a competing palette.
+
 ## Tooling
 
 - `tsx` for development (run TypeScript directly, no build step needed)

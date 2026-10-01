@@ -21,7 +21,7 @@ python3 changelog/scripts/changelog.py
 
 2. The script:
    - **No `CHANGELOG.md`**: writes one from git history, commits grouped by author date
-   - **File exists**: prepends only commits newer than the latest `## YYYY-MM-DD` heading
+   - **File exists**: prepends newer dates; **merges same-day commits** into the latest heading (does not drop that day)
    - If cwd is inside a git repo but not the git root, only commits that touch this directory are used
 
 3. Read `CHANGELOG.md`. Tighten bullet wording if a subject is noisy; keep dates and grouping.

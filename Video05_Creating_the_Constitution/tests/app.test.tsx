@@ -13,8 +13,9 @@ describe("GET /", () => {
   });
 
   it("returns HTML", async () => {
-    const { res } = await getHome();
+    const { res, html } = await getHome();
     expect(res.headers.get("content-type")).toContain("text/html");
+    expect(html.startsWith("<!DOCTYPE html>")).toBe(true);
   });
 
   it("contains the AgentClinic heading", async () => {
@@ -56,6 +57,8 @@ describe("GET /static/style.css", () => {
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toContain("text/css");
     expect(css).toMatch(/--[a-z0-9-]+:/);
+    expect(css).toMatch(/--orange:/);
+    expect(css).toMatch(/--black:/);
     expect(css).toMatch(/@media\s*\(min-width:/);
   });
 });

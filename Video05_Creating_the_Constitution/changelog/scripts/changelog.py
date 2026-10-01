@@ -63,6 +63,41 @@ def render_sections(by_date: dict[str, list[str]]) -> list[str]:
     return lines
 
 
+def _norm(text: str) -> str:
+    return text.strip().rstrip(".").strip()
+
+
+def bullets_under_heading(lines: list[str], date: str) -> list[str]:
+    heading = f"## {date}"
+    in_section = False
+    bullets: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("## "):
+            if in_section:
+                break
+            in_section = stripped == heading
+            continue
+        if in_section and stripped.startswith("- "):
+            bullets.append(stripped[2:].strip())
+    return bullets
+
+
+def insert_bullets_under_heading(
+    lines: list[str], date: str, subjects: list[str]
+) -> None:
+    heading = f"## {date}"
+    for i, line in enumerate(lines):
+        if line.strip() != heading:
+            continue
+        j = i + 1
+        if j < len(lines) and lines[j].strip() == "":
+            j += 1
+        lines[j:j] = [f"- {subject}\n" for subject in subjects]
+        return
+    raise SystemExit(f"Missing changelog heading ## {date}")
+
+
 def main() -> None:
     changelog = Path("CHANGELOG.md")
 
@@ -80,19 +115,26 @@ def main() -> None:
 
     last = last_date_in_changelog(changelog)
     by_date = git_log(since_date=last)
-    if last:
-        by_date.pop(last, None)
-    if not by_date:
+    lines = changelog.read_text().splitlines(keepends=True)
+
+    newer = {date: subjects for date, subjects in by_date.items() if last is None or date > last}
+    same_day = by_date.get(last, []) if last else []
+    already = {_norm(b) for b in bullets_under_heading(lines, last)} if last else set()
+    new_same = [s for s in same_day if _norm(s) not in already]
+
+    if not newer and not new_same:
         print("No new commits since last entry — CHANGELOG.md is up to date.")
         sys.exit(0)
 
-    existing = changelog.read_text()
-    lines = existing.splitlines(keepends=True)
-    insert_at = 1 if lines and lines[0].startswith("# ") else 0
-    changelog.write_text(
-        "".join(lines[:insert_at] + render_sections(by_date) + lines[insert_at:])
-    )
-    total = sum(len(v) for v in by_date.values())
+    if new_same:
+        insert_bullets_under_heading(lines, last, new_same)
+
+    if newer:
+        insert_at = 1 if lines and lines[0].startswith("# ") else 0
+        lines[insert_at:insert_at] = render_sections(newer)
+
+    changelog.write_text("".join(lines))
+    total = sum(len(v) for v in newer.values()) + len(new_same)
     print(f"Added {total} new entries to CHANGELOG.md.")
 
 

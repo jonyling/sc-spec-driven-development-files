@@ -25,7 +25,7 @@ This phase exists to prove the baseline: Node runs TypeScript, Hono serves HTML,
 ### Out of scope
 
 - No extra routes or navigation to pages that do not exist yet
-- No SQLite, migrations, or additional routes (Phase 3+)
+- No SQLite, migrations, or additional routes (Phase 2+)
 - No CI/CD pipeline
 
 ## Decisions
@@ -71,6 +71,10 @@ This is a product-wide rule, not a later-phase nice-to-have:
 - The layout includes `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
 
 Do not write desktop-first `max-width` overrides as the primary breakpoint strategy.
+
+### Brand colors
+
+Orange and black. Express them as `--orange` and `--black` in `static/style.css` and use those tokens for chrome, headings, and accents.
 
 ### Header, Main, and Footer are separate files
 

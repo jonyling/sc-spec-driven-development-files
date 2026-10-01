@@ -68,7 +68,7 @@ These paths must exist, each exporting one component:
 
 ### 8. Responsive design is in place
 
-The rendered HTML must contain `<meta name="viewport" content="width=device-width, initial-scale=1.0">`. `static/style.css` must use CSS custom properties and at least one `min-width` media query (mobile-first). Desktop-only `max-width` breakpoints as the primary strategy do not satisfy this.
+The rendered HTML must contain `<meta name="viewport" content="width=device-width, initial-scale=1.0">`. `static/style.css` must use CSS custom properties and at least one `min-width` media query (mobile-first). Desktop-only `max-width` breakpoints as the primary strategy do not satisfy this. The stylesheet must define `--orange` and `--black` and use them for brand chrome.
 
 ### 9. Strict TypeScript is on
 
