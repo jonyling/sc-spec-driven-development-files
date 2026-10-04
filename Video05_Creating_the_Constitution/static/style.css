@@ -74,9 +74,37 @@ footer p {
   text-decoration: none;
 }
 
-.brand-link:focus-visible {
+.brand-link:focus-visible,
+nav a:focus-visible,
+.back a:focus-visible,
+button:focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 4px;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem 1.25rem;
+  width: 100%;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+}
+
+nav a {
+  color: var(--paper);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: var(--orange);
 }
 
 .mark {
@@ -98,11 +126,17 @@ footer p {
 main {
   flex: 1;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
   width: 100%;
   min-width: 0;
   padding: var(--space-lg) var(--page-pad);
+}
+
+main > * {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
 }
 
 .stage {
@@ -145,12 +179,18 @@ h1 {
   min-width: 0;
   color: var(--black);
   font-family: Fraunces, "Iowan Old Style", Palatino, Georgia, serif;
-  font-size: clamp(2.35rem, 11vw, 3.2rem);
+  font-size: clamp(2rem, 6vw, 2.6rem);
   font-optical-sizing: auto;
   font-weight: 680;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  overflow-wrap: break-word;
+}
+
+.copy h1 {
+  font-size: clamp(2.35rem, 11vw, 3.2rem);
   letter-spacing: -0.04em;
   line-height: 0.92;
-  overflow-wrap: break-word;
 }
 
 .tagline {
@@ -199,6 +239,12 @@ h1 {
     --page-pad: var(--space-2xl);
   }
 
+  .top {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .brand-link {
     font-size: 1.15rem;
   }
@@ -220,7 +266,7 @@ h1 {
     align-items: center;
   }
 
-  h1 {
+  .copy h1 {
     font-size: clamp(2.8rem, 7vw, 5.4rem);
   }
 
@@ -231,6 +277,139 @@ h1 {
   .portrait img {
     border-radius: 1.6rem;
   }
+}
+
+.lede {
+  margin: 0 0 var(--space-lg);
+  max-width: 36rem;
+  color: var(--muted);
+}
+
+.cards,
+.facts,
+.book,
+.errors {
+  margin: 0;
+  padding: 0;
+  max-width: 40rem;
+}
+
+.cards {
+  display: grid;
+  gap: var(--space-md);
+  list-style: none;
+}
+
+.cards li,
+.book {
+  display: grid;
+  gap: 0.35rem;
+  padding: var(--space-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+}
+
+.cards a {
+  color: var(--black);
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 680;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.cards span,
+.facts dd {
+  color: var(--ink);
+}
+
+.facts {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.facts div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.facts dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.facts ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.book {
+  margin-top: var(--space-lg);
+}
+
+.book h2 {
+  margin: 0 0 var(--space-sm);
+  font-size: 1.25rem;
+}
+
+.errors {
+  margin: 0 0 var(--space-md);
+  padding-left: 1.1rem;
+  color: var(--black);
+  border-left: 3px solid var(--orange);
+}
+
+form {
+  display: grid;
+  gap: var(--space-md);
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+input,
+button {
+  font: inherit;
+  max-width: 100%;
+}
+
+input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: var(--paper);
+  color: var(--black);
+}
+
+button {
+  justify-self: start;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 0.7rem;
+  background: var(--orange);
+  color: var(--black);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back {
+  margin: 0 0 var(--space-md);
+}
+
+.back a {
+  color: var(--black);
 }
 
 @media (prefers-reduced-motion: reduce) {

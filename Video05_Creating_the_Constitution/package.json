@@ -5,15 +5,17 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx watch src/index.tsx",
+    "dev": "AGENTCLINIC_DB=data/clinic.sqlite tsx watch src/index.tsx",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "AGENTCLINIC_DB=data/clinic.sqlite vitest run"
   },
   "dependencies": {
     "@hono/node-server": "2.1.1",
+    "better-sqlite3": "13.0.3",
     "hono": "4.13.8"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "9.6.0",
     "tsx": "4.23.13",
     "typescript": "^5.5.3",
     "vitest": "5.0.1"

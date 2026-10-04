@@ -1,49 +1,47 @@
 # Tech Stack
 
-AgentClinic is a server-side TypeScript application. All rendering happens on the server; the browser receives plain HTML that works well and looks good.
+AgentClinic is a **server-side TypeScript** brownfield app. The browser receives HTML from Hono JSX. There is no SPA.
 
-## Core
+## Core (as running today)
 
-| Layer | Choice | Rationale |
+| Layer | Choice | Notes |
 |---|---|---|
-| Language | TypeScript | Type safety end-to-end; satisfies Mary's requirement |
-| Runtime | Node.js | Stable, well-supported, vast ecosystem |
-| Server framework | **Hono** | Lightweight, TypeScript-first, fast, excellent DX; routes and middleware feel natural |
-| Templating | Hono JSX (server-side) | JSX without React overhead; components are just functions |
-| CSS | Plain CSS + CSS custom properties | No build step required; mobile-first responsive layout; Steve gets a modern, attractive result on any device |
+| Language | TypeScript | Mary's requirement |
+| Runtime | Node.js | |
+| Server | **Hono** `4.12.9` (pinned) | Routes, middleware, JSX |
+| Adapter | `@hono/node-server` `1.19.12` (pinned) | |
+| UI | Hono JSX + **PicoCSS** (CDN classless) + `static/style.css` | Pico is the real base stylesheet in `Layout.tsx` |
+| Database | SQLite via `better-sqlite3` `12.8.0` (pinned) | Plain SQL migrations under `src/db/migrations/` |
+| Tests | Vitest `4.1.2` (pinned) | `npm test` |
 
-## Recommended: Hono
+## CSS
 
-[Hono](https://hono.dev) is chosen over Express/Fastify because:
+**PicoCSS** (classless, loaded from jsDelivr in `Layout`) provides the default look. `static/style.css` only holds project overrides (font family, focus ring). Do not pretend the stack is "plain CSS only" — that would fight the legacy code.
 
-- First-class TypeScript with zero config
-- Built-in JSX renderer for server-side HTML
-- Middleware model is simple and composable
-- Runs on Node, Deno, Bun, and edge runtimes without changes
+Mobile-friendly layout comes largely from Pico; keep the viewport meta tag. Prefer small overrides over a second framework.
 
 ## Data
 
-- **SQLite** (via `better-sqlite3`) for local development and early production — simple, embedded, no infrastructure
-- Migrations via plain SQL files; no ORM to start
+- SQLite file opened through `src/db/`
+- Migrations: numbered `.sql` files, no ORM
+- Seed via `npm run seed` / `src/db/seed.ts`
 
-## Testing
+## Testing & tooling
 
-- **Vitest** — fast, TypeScript-native, compatible with the rest of the stack
-- Tests live alongside source files or in a `tests/` directory
-- Run via `npm test`; CI must pass before merge
+- `tsx` `4.21.0` (pinned) for `npm run dev`
+- `typescript` `5.9.3` (pinned) / `tsc --noEmit` for `npm run typecheck`
+- `@types/better-sqlite3` `7.6.13` (pinned)
+- `vitest` for `npm test`
 
-## Tooling
+## Closed legacy gaps
 
-- `tsx` for development (run TypeScript directly, no build step needed)
-- `tsc` for production builds
-- `prettier` for formatting
-
-## CSS Approach
-
-All CSS is mobile-first: base styles target small screens and `min-width` media queries progressively enhance for larger viewports. CSS custom properties hold spacing, color, and sizing tokens so values stay consistent across breakpoints. No CSS framework or build step — the browser receives a single flat stylesheet.
+- **Pins:** `better-sqlite3`, `@types/better-sqlite3`, and `typescript` are exact versions (no `^` / `~`), matching Hono.
+- **CSS truth:** PicoCSS + `static/style.css` overrides — not "plain CSS only."
+- **Prettier:** not a project dependency; we do not claim it.
 
 ## What We Are Not Using
 
-- No React, Vue, or Svelte — server-side rendering keeps the stack simple
-- No ORM — SQL is sufficient at this scale
-- No Docker — not yet; that's a later phase concern
+- No React / Vue / Svelte client app
+- No ORM
+- No Docker (yet)
+- No Prettier (unless a later phase adds it on purpose)

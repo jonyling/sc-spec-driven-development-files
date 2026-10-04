@@ -1,51 +1,51 @@
 # Roadmap
 
-Phases are intentionally focused — each one is a shippable slice of work, independently reviewable and testable.
+There is no `TODO.md` in this brownfield tree. Phases below follow what the codebase already ships, then very small follow-ups from stack drift (pins and doc/code honesty). Each phase stays independently reviewable.
 
 ---
 
-## Phase 1 — Hello Hono ✅
-- Install and configure Hono with `tsx` dev server
-- Single `/` route returning "AgentClinic is open for business"
-- Confirm TypeScript types work end-to-end
+## Phase 1 — Hello Hono & shell ✅
 
-## Phase 2 — Agents & Ailments
-- Server-side JSX layout component (header, nav, main, footer)
-- Basic CSS (custom properties, reset, typography)
-- All routes render inside the shared layout
-- SQLite database + first migration (`agents` table)
-- Seed a handful of fictional agents
-- `/agents` page listing all agents
-- `/agents/:id` page showing a single agent's profile (name, model type, current status, presenting complaints)
-- `ailments` table + seed data (e.g., "context-window claustrophobia", "prompt fatigue")
-- `/ailments` list page
-- Link agents to one or more ailments
+- Hono + `tsx` dev server
+- Shared layout (header / main / footer)
+- Home page and static assets
 
-## Phase 3 — Therapies Catalog
-- `therapies` table + seed data
-- `/therapies` list page
-- Map ailments → recommended therapies
+## Phase 2 — Agents & ailments ✅
 
-## Phase 4 — Appointment Booking
-- `appointments` table (agent, therapist, datetime, status)
-- Form to book an appointment from an agent's detail page
-- Basic validation and confirmation page
+- SQLite migrations and seed for agents, ailments, links
+- `/agents`, `/agents/:id`, `/ailments`
+- PicoCSS layout wiring
 
-## Phase 5 — Staff Dashboard
-- `/dashboard` with summary counts: agents, open appointments, ailments in-flight
-- Simple table views for staff to manage records
-- Mary's dashboard is now real
+## Phase 3 — Therapies ✅
 
-## Phase 6 — Polish & Accessibility
-- Responsive layout audit across all pages (mobile-first foundation established in Phase 1; Phase 6 ensures every new page and component follows the pattern)
-- Semantic HTML audit
-- Keyboard navigation and focus styles
+- Therapies table, seed, `/therapies`
+- Ailment → therapy mapping
 
-## Phase 7 — Hardening
-- Error pages (404, 500)
-- Input sanitization on all forms
-- Basic logging middleware
+## Phase 4 — Appointment booking ✅
+
+- Appointments table
+- Book from agent detail; validation and confirmation
+
+## Phase 5 — Staff dashboard ✅
+
+- `/dashboard` counts and staff-facing tables
+
+## Phase 6 — Hardening already in tree ✅
+
+- 404 / 500 pages
+- Request logging middleware
+
+## Phase 7 — Pin dependency drift ✅
+
+- Pin `better-sqlite3` and `@types/better-sqlite3` to exact versions
+- Pin `typescript` to an exact version
+- Confirm `npm run typecheck` and `npm test` still pass
+
+## Phase 8 — Constitution hygiene ✅
+
+- Keep `specs/tech-stack.md` aligned with PicoCSS + pinned deps after Phase 7
+- Drop phantom Prettier — do not claim a tool we do not install
 
 ---
 
-Later phases (not yet planned): auth, email notifications, therapist profiles, reporting.
+Later (not planned here): auth, email notifications, therapist profile pages, reporting, Docker.
