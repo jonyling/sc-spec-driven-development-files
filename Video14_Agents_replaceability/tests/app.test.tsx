@@ -1,13 +1,15 @@
 import { describe, it, expect, beforeAll, vi } from "vitest";
-import { createDb } from "../src/db/index";
+import type Database from "better-sqlite3";
+import { createDb, getAllFeedback } from "../src/db/index";
 import { migrate } from "../src/db/migrate";
 import { seed } from "../src/db/seed";
 import { createApp } from "../src/app";
 
+let db: Database.Database;
 let app: ReturnType<typeof createApp>;
 
 beforeAll(() => {
-  const db = createDb(":memory:");
+  db = createDb(":memory:");
   migrate(db);
   seed(db);
   app = createApp(db);
@@ -128,6 +130,23 @@ describe("Appointment booking", () => {
 
   it("GET /agents/999/appointments/new returns 404", async () => {
     const res = await app.request("/agents/999/appointments/new");
+    expect(res.status).toBe(404);
+  });
+
+  it("POST /agents/999/appointments returns 404 for unknown agent", async () => {
+    const formData = new FormData();
+    formData.append("therapist_name", "Dr. Ghost");
+    formData.append("date", "2099-12-31");
+    formData.append("time", "10:00");
+    const res = await app.request("/agents/999/appointments", {
+      method: "POST",
+      body: formData,
+    });
+    expect(res.status).toBe(404);
+  });
+
+  it("GET confirmation for a missing appointment returns 404", async () => {
+    const res = await app.request("/agents/1/appointments/99999");
     expect(res.status).toBe(404);
   });
 
@@ -302,6 +321,44 @@ describe("POST /feedback", () => {
     expect(res.status).toBe(400);
   });
 
+  it("does not insert a row when name is missing", async () => {
+    const before = getAllFeedback(db).length;
+    const formData = new FormData();
+    formData.append("name", "");
+    formData.append("message", "Should not persist.");
+    formData.append("rating", "3");
+    const res = await app.request("/feedback", { method: "POST", body: formData });
+    expect(res.status).toBe(400);
+    expect(getAllFeedback(db).length).toBe(before);
+  });
+
+  it("does not insert a row when message is missing", async () => {
+    const before = getAllFeedback(db).length;
+    const formData = new FormData();
+    formData.append("name", "TestBot-99");
+    formData.append("message", "");
+    formData.append("rating", "3");
+    const res = await app.request("/feedback", { method: "POST", body: formData });
+    expect(res.status).toBe(400);
+    expect(getAllFeedback(db).length).toBe(before);
+  });
+
+  it("sanitizes HTML tags from feedback fields", async () => {
+    const formData = new FormData();
+    formData.append("name", "<script>alert(1)</script>SafeBot");
+    formData.append("email", "");
+    formData.append("message", "<b>Bold</b> and helpful.");
+    formData.append("rating", "5");
+    const postRes = await app.request("/feedback", { method: "POST", body: formData });
+    expect(postRes.status).toBe(302);
+    const res = await app.request("/feedback");
+    const html = await res.text();
+    expect(html).not.toContain("<script>");
+    expect(html).not.toContain("<b>");
+    expect(html).toContain("SafeBot");
+    expect(html).toContain("Bold and helpful.");
+  });
+
   it("accepts a submission without email", async () => {
     const formData = new FormData();
     formData.append("name", "AnonymousBot");
@@ -322,6 +379,20 @@ describe("404 handling", () => {
     const res = await app.request("/nonexistent-route");
     const html = await res.text();
     expect(html).toContain("Not Found");
+    expect(html).toContain("<header");
+  });
+});
+
+describe("500 handling", () => {
+  it("returns 500 with the ServerError page when a handler throws", async () => {
+    const boomApp = createApp(db);
+    boomApp.get("/__boom", () => {
+      throw new Error("intentional test failure");
+    });
+    const res = await boomApp.request("/__boom");
+    expect(res.status).toBe(500);
+    const html = await res.text();
+    expect(html).toContain("Something Went Wrong");
     expect(html).toContain("<header");
   });
 });

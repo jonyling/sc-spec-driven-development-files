@@ -5,6 +5,8 @@ import { Main } from "../src/components/Main";
 import { Layout } from "../src/components/Layout";
 import { FeedbackForm } from "../src/components/FeedbackForm";
 import { FeedbackList } from "../src/components/FeedbackList";
+import { AppointmentForm } from "../src/components/AppointmentForm";
+import { Dashboard } from "../src/components/Dashboard";
 import type { Feedback } from "../src/db/types";
 
 describe("Header", () => {
@@ -21,6 +23,15 @@ describe("Header", () => {
   it("displays the site name", () => {
     const html = Header({}).toString();
     expect(html).toContain("AgentClinic");
+  });
+
+  it("links to the main clinic routes", () => {
+    const html = Header({}).toString();
+    expect(html).toContain('href="/agents"');
+    expect(html).toContain('href="/ailments"');
+    expect(html).toContain('href="/therapies"');
+    expect(html).toContain('href="/dashboard"');
+    expect(html).toContain('href="/feedback"');
   });
 });
 
@@ -128,5 +139,88 @@ describe("FeedbackList", () => {
   it("renders the empty-state message when given an empty array", () => {
     const html = FeedbackList({ items: [] }).toString();
     expect(html).toContain("No feedback yet");
+  });
+});
+
+describe("AppointmentForm", () => {
+  it("posts to the agent appointments route", () => {
+    const html = AppointmentForm({
+      agentId: 1,
+      agentName: "Bartholomew-47B",
+    }).toString();
+    expect(html).toContain('action="/agents/1/appointments"');
+    expect(html).toContain('method="post"');
+    expect(html).toContain('name="therapist_name"');
+    expect(html).toContain('name="date"');
+    expect(html).toContain('name="time"');
+  });
+
+  it("shows the agent name and validation errors", () => {
+    const html = AppointmentForm({
+      agentId: 1,
+      agentName: "Bartholomew-47B",
+      errors: {
+        therapist_name: "Therapist name is required.",
+        general: "Appointment must be scheduled in the future.",
+      },
+      values: { therapist_name: "", date: "1999-01-01", time: "10:00" },
+    }).toString();
+    expect(html).toContain("Bartholomew-47B");
+    expect(html).toContain("Therapist name is required.");
+    expect(html).toContain("Appointment must be scheduled in the future.");
+    expect(html).toContain('value="1999-01-01"');
+  });
+});
+
+describe("Dashboard", () => {
+  it("renders stats, agent links, appointments, and ailments", () => {
+    const html = Dashboard({
+      stats: {
+        agentCount: 6,
+        openAppointmentCount: 2,
+        activeAilmentCount: 4,
+      },
+      agents: [
+        {
+          id: 1,
+          name: "Bartholomew-47B",
+          model_type: "GPT-47B",
+          status: "active",
+        },
+      ],
+      appointments: [
+        {
+          id: 1,
+          agent_name: "Bartholomew-47B",
+          therapist_name: "Dr. Evelyn Watts",
+          scheduled_at: "2099-01-15T10:00:00",
+          status: "confirmed",
+        },
+      ],
+      ailments: [{ id: 1, name: "Prompt Fatigue", agent_count: 2 }],
+    }).toString();
+    expect(html).toContain("Staff Dashboard");
+    expect(html).toContain("6");
+    expect(html).toContain("Total Agents");
+    expect(html).toContain("2");
+    expect(html).toContain("Open Appointments");
+    expect(html).toContain('href="/agents/1"');
+    expect(html).toContain("Bartholomew-47B");
+    expect(html).toContain("Dr. Evelyn Watts");
+    expect(html).toContain("Prompt Fatigue");
+  });
+
+  it("renders the empty appointments message", () => {
+    const html = Dashboard({
+      stats: {
+        agentCount: 0,
+        openAppointmentCount: 0,
+        activeAilmentCount: 0,
+      },
+      agents: [],
+      appointments: [],
+      ailments: [],
+    }).toString();
+    expect(html).toContain("No open appointments.");
   });
 });

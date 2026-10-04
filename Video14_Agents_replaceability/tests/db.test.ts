@@ -78,6 +78,16 @@ describe("migrate", () => {
       .get();
     expect(row).toBeDefined();
   });
+
+  it("creates the feedback table", () => {
+    const db = freshDb();
+    const row = db
+      .prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='feedback'"
+      )
+      .get();
+    expect(row).toBeDefined();
+  });
 });
 
 describe("seed", () => {
@@ -135,6 +145,15 @@ describe("seed", () => {
     expect(count).toBeGreaterThanOrEqual(2);
   });
 
+  it("inserts at least 1 feedback entry", () => {
+    const db = freshDb();
+    seed(db);
+    const { count } = db
+      .prepare("SELECT COUNT(*) as count FROM feedback")
+      .get() as { count: number };
+    expect(count).toBeGreaterThanOrEqual(1);
+  });
+
   it("is idempotent — seeding twice does not duplicate rows", () => {
     const db = freshDb();
     seed(db);
@@ -163,6 +182,23 @@ describe("seed", () => {
     seed(db);
     const second = (
       db.prepare("SELECT COUNT(*) as count FROM therapies").get() as {
+        count: number;
+      }
+    ).count;
+    expect(second).toBe(first);
+  });
+
+  it("is idempotent for feedback — seeding twice does not duplicate rows", () => {
+    const db = freshDb();
+    seed(db);
+    const first = (
+      db.prepare("SELECT COUNT(*) as count FROM feedback").get() as {
+        count: number;
+      }
+    ).count;
+    seed(db);
+    const second = (
+      db.prepare("SELECT COUNT(*) as count FROM feedback").get() as {
         count: number;
       }
     ).count;
